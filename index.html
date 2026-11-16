@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLICK CHALLENGE</title>
+<style>
+body {
+  margin: 0;
+  background: #101027;
+  color: white;
+  font-family: Arial;
+  text-align: center;
+}
+h1 {
+  color: #00ffcc;
+  margin-top: 25px;
+}
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 35px;
+  font-size: 22px;
+}
+#arena {
+  width: 90vw;
+  max-width: 500px;
+  height: 400px;
+  background: #202044;
+  border: 3px solid #00ffcc;
+  border-radius: 15px;
+  margin: 15px auto;
+  position: relative;
+  overflow: hidden;
+}
+.circle {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  position: absolute;
+  cursor: pointer;
+  background: radial-gradient(circle at 30% 30%, white, #00eaff, #0066ff);
+  box-shadow: 0 0 20px #00ccff;
+  border: none;
+}
+button {
+  background: #00ffcc;
+  color: #101027;
+  border: none;
+  padding: 15px 30px;
+  font-size: 20px;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#result {
+  font-size: 25px;
+  color: gold;
+}
+</style>
+</head>
+<body>
+
+<h1>🎯 CLICK CHALLENGE</h1>
+
+<div class="stats">
+  <p>⭐ Очки: <span id="score">0</span></p>
+  <p>⏱️ Время: <span id="time">30</span></p>
+</div>
+
+<div id="arena"></div>
+
+<button onclick="startGame()">НАЧАТЬ ИГРУ</button>
+<h2 id="result">Набери больше очков!</h2>
+
+<script>
+const arena = document.getElementById("arena");
+const scoreText = document.getElementById("score");
+const timeText = document.getElementById("time");
+const result = document.getElementById("result");
+
+let score = 0;
+let time = 30;
+let timer;
+let playing = false;
+
+function spawnCircle() {
+  arena.innerHTML = "";
+
+  const circle = document.createElement("button");
+  circle.className = "circle";
+
+  const maxX = arena.clientWidth - 55;
+  const maxY = arena.clientHeight - 55;
+
+  circle.style.left = Math.random() * maxX + "px";
+  circle.style.top = Math.random() * maxY + "px";
+
+  circle.onclick = () => {
+    if (!playing) return;
+    score++;
+    scoreText.textContent = score;
+    spawnCircle();
+  };
+
+  arena.appendChild(circle);
+}
+
+function startGame() {
+  clearInterval(timer);
+
+  score = 0;
+  time = 30;
+  playing = true;
+
+  scoreText.textContent = score;
+  timeText.textContent = time;
+  result.textContent = "Лови кружочки! 🔵";
+
+  spawnCircle();
+
+  timer = setInterval(() => {
+    time--;
+    timeText.textContent = time;
+
+    if (time <= 0) {
+      clearInterval(timer);
+      playing = false;
+      arena.innerHTML = "";
+      result.textContent = "🏆 Игра окончена! Твой счёт: " + score;
+    }
+  }, 1000);
+}
+</script>
+
+</body>
+</html>
